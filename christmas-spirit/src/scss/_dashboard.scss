@@ -1,0 +1,10 @@
+.dashboard {
+
+  max-width: 1200px;
+  margin-inline: auto;
+  
+
+  @media (min-width: 1023px) {
+    min-width: 600px;
+  }
+}
