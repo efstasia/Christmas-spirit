@@ -14,7 +14,7 @@ const ribbonColors = ["#fedd7a", "#ffffff", "#FF90BB", "#1B4D3E", "#FFE6E6"];
 
 export const ChristmasPresents = () => {
   const [openPresents, setOpenPresents] = useState({});
-  const [data, setData] = useState(null); // 👉 now storing a single object
+  const [presentData, setPresentData] = useState({});
 
   const { VITE_APP_URL } = import.meta.env;
 
@@ -24,37 +24,58 @@ export const ChristmasPresents = () => {
       if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
       const result = await response.json();
-      console.log("API response:", result.data);
-      setData(result.data); // 👉 store the object directly
+
+      setPresentData((prev) => ({
+        ...prev,
+        [id]: result.data
+      }));
     } catch (error) {
       console.error(error.message);
     }
   }
 
-  const togglePresent = (id) => {
-    setOpenPresents((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  async function getStatus() {
+    try {
+      const response = await fetch(`${VITE_APP_URL}/activities`);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+
+      const result = await response.json();
+ 
+      setOpenPresents(
+        Object.fromEntries(result.data.map((p) => [p.id, p.status]))
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  // Loads which presents are open/closed on mount.
+  useEffect(() => {
+    getStatus();
+  }, []);
+
+  // When openPresents is loaded, this loads data for all open ones.
+  useEffect(() => {
+    Object.entries(openPresents).forEach(([id, status]) => {
+      if (status === "open") {
+        getData(id);
+      }
+    });
+  }, [openPresents]);
 
   return (
     <>
-      <div>{/* <img src={tree} alt="" /> */}</div>
-
       <div className="presents">
         {mockData.map((item, index) => {
           const boxColor = boxColors[index % boxColors.length];
           const ribbonColor = ribbonColors[index % ribbonColors.length];
-          const isOpen = data && data.status === 'open' && data.id === item.id;
+          const isOpen = openPresents[item.id] === "open";
 
           return (
             <div
               key={item.id}
               className={`present ${isOpen ? "present--open" : ""}`}
-              onClick={() => {
-                getData(item.id);
-              }}
+              onClick={() => getData(item.id)}
               style={{ backgroundColor: boxColor }}
             >
               <div className="present__box">
@@ -75,9 +96,10 @@ export const ChristmasPresents = () => {
                 </div>
 
                 <p className="present__challenge-text">
-                  {isOpen && data && data.id === item.id
-                    ? data.title
-                    : item.challenge}
+                  {isOpen
+                    ? presentData[item.id]?.title  
+                    : ''            
+                  }
                 </p>
               </div>
             </div>

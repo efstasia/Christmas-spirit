@@ -3,8 +3,9 @@
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  height: 100%;
+  margin-top: 180px;
   align-items: center;
+  row-gap: 140px;
 }
 
 .present {
@@ -126,87 +127,5 @@
       top: -90px;
       left: 10px;
     }
-
-   
-  }
-}
-
-
-
-// body {
-//   background: #000; /* dark background to see the neon glow */
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   height: 100vh;
-// }
-
-.neon-tree {
-  position: relative;
-  width: 0;
-  height: 0;
-  border-left: 80px solid transparent;
-  border-right: 80px solid transparent;
-  border-bottom: 120px solid #072c00; /* neon green */
-  filter: drop-shadow(0 0 8px #39ff14) drop-shadow(0 0 16px #39ff14);
-}
-
-/* Add smaller triangles for the layered look */
-.neon-tree::before,
-.neon-tree::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 60px solid transparent;
-  border-right: 60px solid transparent;
-  border-bottom: 90px solid #072c00;
-  filter: drop-shadow(0 0 8px #39ff14) drop-shadow(0 0 16px #39ff14);
-}
-
-.neon-tree::before {
-  top: -70px;
-}
-
-.neon-tree::after {
-  top: -130px;
-  border-left: 40px solid transparent;
-  border-right: 40px solid transparent;
-  border-bottom: 60px solid #072c00;
-}
-
-
-svg {
-  max-height: 60vh;
-  overflow:visible;
-}
-path {
-  fill: #379157;
-  stroke: #379157;
-  stroke-width: .2;
-  transform: scale(0);
-  transform-origin: 50% 50%;
-  animation: star 8s ease-in-out infinite;
-  animation-delay: calc( var(--no) * .025s );
-  transform-box: fill-box;
-}
-@keyframes star {
-  0% {
-    transform: scale(0);
-    animation-timing-function: cubic-bezier(.74,1.72,.57,1.01)
-  }
-  10% {
-    transform: scale(1);
-  }
-  65% {
-    transform: translateY(0px) scale(1);
-  }
-  75% {
-    transform: translateY(50px) scale(0);
-  }
-  100% {
-    transform: translateY( 0px ) scale(0);
   }
 }
