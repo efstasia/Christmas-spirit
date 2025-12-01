@@ -49,6 +49,15 @@ export const ChristmasPresents = () => {
     }
   }
 
+  async function handleOpenPresent(id) {
+    setOpenPresents((prev) => ({
+      ...prev,
+      [id]: "open"
+    }));
+
+    await getData(id);
+  }
+
   // Loads which presents are open/closed on mount.
   useEffect(() => {
     getStatus();
@@ -69,13 +78,13 @@ export const ChristmasPresents = () => {
         {mockData.map((item, index) => {
           const boxColor = boxColors[index % boxColors.length];
           const ribbonColor = ribbonColors[index % ribbonColors.length];
-          const isOpen = openPresents[item.id] === "open";
+          const isOpen = presentData[item.id]?.status === "open";
 
           return (
             <div
               key={item.id}
               className={`present ${isOpen ? "present--open" : ""}`}
-              onClick={() => getData(item.id)}
+              onClick={() => handleOpenPresent(item.id)}
               style={{ backgroundColor: boxColor }}
             >
               <div className="present__box">
