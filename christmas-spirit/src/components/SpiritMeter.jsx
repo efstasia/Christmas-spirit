@@ -7,12 +7,11 @@ export const SpiritMeter = ({
   step = 1,
   dbValue = 89,
 }) => {
-  const [value, setValue] = useState(dbValue); 
+  const [value, setValue] = useState(null); 
   const [score, setScore] = useState(0);
   const [showScorePopup, setShowScorePopup] = useState(false);
   const [password, setPassword] = useState("");
 
-  const [shouldAnimate, setShouldAnimate] = useState(false); 
 
   const targetValueRef = useRef(dbValue); 
   const animationRef = useRef(null);
@@ -61,42 +60,13 @@ export const SpiritMeter = ({
         }),
       });
 
-      await getSpirit(); // fetches updated backend value
       setShowScorePopup(false); // closes popup
-
-      setTimeout(() => {
-        setShouldAnimate(true);
-      }, 2000);
+      await getSpirit(); // fetches updated backend value
     } catch (err) {
       console.error("PATCH error:", err);
     }
   };
 
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    cancelAnimationFrame(animationRef.current);
-
-    const animate = () => {
-      setValue((prev) => {
-        const target = targetValueRef.current;
-        const diff = target - prev;
-
-        if (Math.abs(diff) < 0.5) {
-          setShouldAnimate(false);
-          return target;
-        }
-
-        return prev + diff * 0.05; 
-      });
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationRef.current);
-  }, [shouldAnimate]);
 
   useEffect(() => {
     getSpirit();
